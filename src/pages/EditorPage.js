@@ -113,9 +113,11 @@ const safeBase64Decode = (str) => {
 
   const languageIds = {
     python: 71, // Python 3
-    cpp: 54     // C++ (GCC 9.2.0)
+    cpp: 54 ,    // C++ (GCC 9.2.0)
+    JavaScript:63,
+    Java:62,
   };
-  // const encodedCode = btoa((encodeURIComponent(code))); // Encode source code in base64
+
 
   try {
     console.log('Sending to Judge0:', {
@@ -125,14 +127,14 @@ const safeBase64Decode = (str) => {
     const response = await axios.post(
       'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=true',
       {
-        language_id:54,
+        language_id:languageIds(language),
         source_code: encode(code),
          stdin: btoa('') 
       },
       {
         headers: {
           'content-type': 'application/json',
-          'X-RapidAPI-Key': 'cce24d91e0mshf2a9f60b37b9089p12137djsn52d754cb066c', // ← Replace with your real API key
+          'X-RapidAPI-Key': 'cce24d91e0mshf2a9f60b37b9089p12137djsn52d754cb066c',
           'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
         }
       }
@@ -143,21 +145,14 @@ const safeBase64Decode = (str) => {
     if (compile_output) result += `\nCompiler Output:\n${atob(compile_output)}`;
     if (stderr) result += `\nError:\n${atob(stderr)}`;
 
-    // Add execution details if available
+    
     if (time !== null && memory !== null) {
       result += `\n\n⏱ Time: ${time}s\n🧠 Memory: ${memory} KB`;
     }
 
     setOutput(result || 'No output');
-    // setStatus(null);
+    
     setStatus(null);
-//     // const { stdout, stderr, compile_output, status } = response.data;
-//    setOutput(
-//   safeBase64Decode(stdout) ||
-//   safeBase64Decode(stderr) ||
-//   safeBase64Decode(compile_output) ||
-//   status.description
-// );
 
   console.log("Full response:", response.data);
 
